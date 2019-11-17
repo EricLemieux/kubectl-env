@@ -1,3 +1,61 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
-echo "Hello world!"
+set -e
+#set -x
+
+assert_not_empty() {
+  if [[ -z "${1}" ]]; then
+    return 1
+  fi
+}
+
+show_help() {
+  echo "help"
+}
+
+runtime_error() {
+  echo "ERROR: ${*}" >&2
+  show_help
+  exit 1
+}
+
+main() {
+  pod=""
+  namespace="default"
+
+  echo "${*}"
+
+  # TODO: process arguments
+  while :; do
+    case "${1:-}" in
+      -h | --help)
+        show_help
+        exit
+        ;;
+      -n | --namespace)
+        namespace="${1}"
+        shift
+        ;;
+      *)
+        if [[ "${1}" == "-*" ]]; then
+          runtime_error "Unknown flag"
+        else
+          echo "Setting pod to ${1}"
+          pod="${1}"
+          shift
+        fi
+        ;;
+    esac
+
+    echo "${@}"
+    shift
+  done
+
+  echo "Pod: ${pod}"
+
+  assert_not_empty "${pod}" || runtime_error "Pod required"
+
+  kubectl exec -it "${pod}" --namespace "${namespace}" -- env | sort
+}
+
+main "${@}"

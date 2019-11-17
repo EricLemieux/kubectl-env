@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: example-deployment
+  labels:
+    app: example-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: example-deployment
+      labels:
+        app: example-deployment
+    spec:
+      containers:
+        - name: example-deployment
+          image: nginx
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: ABC
+              value: "abc"
+            - name: XYZ
+              value: "123"
+      restartPolicy: Always
+  selector:
+    matchLabels:
+      app: example-deployment
