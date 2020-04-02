@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
-#set -x
+set -euo pipefail
 
 assert_not_empty() {
   if [[ -z "${1}" ]]; then
@@ -23,10 +22,8 @@ main() {
   pod=""
   namespace="default"
 
-  echo "${*}"
-
-  while :; do
-    case "${1:-}" in
+  while [[ "${#}" -gt 0 ]]; do
+    case $1 in
       -h | --help)
         show_help
         exit
@@ -39,22 +36,16 @@ main() {
         if [[ "${1}" == "-*" ]]; then
           runtime_error "Unknown flag"
         else
-          echo "Setting pod to ${1}"
           pod="${1}"
           shift
         fi
         ;;
     esac
-
-    echo "${@}"
-    shift
   done
-
-  echo "Pod: ${pod}"
 
   assert_not_empty "${pod}" || runtime_error "Pod required"
 
-  kubectl exec -it "${pod}" --namespace "${namespace}" -- env | sort
+  kubectl exec "${pod}" --namespace "${namespace}" -- env | sort
 }
 
 main "${@}"
