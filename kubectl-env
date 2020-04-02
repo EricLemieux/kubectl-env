@@ -45,7 +45,7 @@ main() {
 
   assert_not_empty "${pod}" || runtime_error "Pod required"
 
-  kubectl exec -it "${pod}" --namespace "${namespace}" -- env | sort
+  kubectl exec "${pod}" --namespace "${namespace}" -- env | sort
 }
 
 main "${@}"
