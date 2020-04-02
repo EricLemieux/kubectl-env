@@ -15,7 +15,7 @@ show_help() {
 
 runtime_error() {
   echo "ERROR: ${*}" >&2
-  show_help
+  show_help >&2
   exit 1
 }
 
@@ -25,7 +25,6 @@ main() {
 
   echo "${*}"
 
-  # TODO: process arguments
   while :; do
     case "${1:-}" in
       -h | --help)

@@ -21,6 +21,8 @@ spec:
               value: "abc"
             - name: XYZ
               value: "123"
+            - name: BBB
+              value: "abc123"
       restartPolicy: Always
   selector:
     matchLabels:
