@@ -9,4 +9,4 @@ install:
 .PHONY: e2e-test
 e2e-test:
 	kubectl apply -f test --wait
-	./kubectl-env example-deployment
+	./kubectl-env $$(kubectl get pod -l app=example-deployment -o name)
