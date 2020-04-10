@@ -29,8 +29,8 @@ main() {
         exit
         ;;
       -n | --namespace)
-        namespace="${1}"
-        shift
+        namespace="${2}"
+        shift 2
         ;;
       *)
         if [[ "${1}" == "-*" ]]; then
