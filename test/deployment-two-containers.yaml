@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: example-multi-container
+  labels:
+    app: example-multi-container
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: example-multi-container
+      labels:
+        app: example-multi-container
+    spec:
+      containers:
+        - name: primary-container
+          image: nginx
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: ABC
+              value: "abc"
+            - name: XYZ
+              value: "123"
+            - name: BBB
+              value: "abc123"
+        - name: secondary-container
+          image: alpine # Port conflicts on the host when they are both nginx
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh"]
+          args: ["-c", "while true; do date; sleep 5;done"]
+          env:
+            - name: ABC
+              value: "aaa"
+            - name: XYZ
+              value: "bbb"
+            - name: BBB
+              value: "ccc"
+      restartPolicy: Always
+  selector:
+    matchLabels:
+      app: example-multi-container

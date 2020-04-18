@@ -20,7 +20,8 @@ runtime_error() {
 
 main() {
   pod=""
-  namespace="default"
+  namespace=""
+  container=""
 
   while [[ "${#}" -gt 0 ]]; do
     case $1 in
@@ -30,6 +31,10 @@ main() {
         ;;
       -n | --namespace)
         namespace="${2}"
+        shift 2
+        ;;
+      -c | --container)
+        container="${2}"
         shift 2
         ;;
       *)
@@ -45,7 +50,21 @@ main() {
 
   assert_not_empty "${pod}" || runtime_error "Pod required"
 
-  kubectl exec "${pod}" --namespace "${namespace}" -- env | sort
+  exec_command=()
+  exec_command+=("kubectl exec")
+  exec_command+=("${pod}")
+
+  if [[ -n "${namespace}" ]]; then
+    exec_command+=("--namespace ${namespace}")
+  fi
+
+  if [[ -n "${container}" ]]; then
+    exec_command+=("--container ${container}")
+  fi
+
+  exec_command+=("-- env")
+
+  eval "${exec_command[@]}" | sort
 }
 
 main "${@}"
