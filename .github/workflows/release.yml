@@ -12,9 +12,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: get tag name
+        run: |
+          echo ::set-env name=tag::${GITHUB_REF/refs\/tags\//}
+
       - name: get commit message
         run: |
-          echo ::set-env name=message::$(git log -n 1 --format='%B' ${{ github.sha }})
+          echo ::set-env name=message::$(git tag -n99 --format='%(contents)' ${{ env.tag }})
 
       - name: Create Release
         id: create_release
