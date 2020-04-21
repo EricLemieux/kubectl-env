@@ -12,6 +12,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: get commit message
+        run: |
+          echo ::set-env name=message::$(git log --format=%B -n 1 ${{ github.ref }})
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -20,5 +24,7 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
+          body: |
+            ${{ env.message }}
           draft: false
-          prerelease: false
+          prerelease: ${{contains(github.ref, 'rc')}}
