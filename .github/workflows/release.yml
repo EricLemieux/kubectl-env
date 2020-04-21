@@ -14,7 +14,7 @@ jobs:
 
       - name: get commit message
         run: |
-          echo ::set-env name=message::$(git tag -l --format='%(contents)' ${{ github.sha }})
+          echo ::set-env name=message::$(git log -n 1 --format='%B' ${{ github.sha }})
 
       - name: Create Release
         id: create_release
