@@ -12,9 +12,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Get the tag version
+        run: echo ::set-output name=tag::${GITHUB_REF/refs\/tags\//}
+
       - name: get commit message
         run: |
-          echo ::set-env name=message::$(git tag -l --format='%(contents)' ${{ github.ref }})
+          echo ::set-env name=message::$(git tag -l --format='%(contents)' ${{ env.tag }})
 
       - name: Create Release
         id: create_release
